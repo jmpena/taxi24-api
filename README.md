@@ -67,7 +67,20 @@ Taxi24 es una API REST implementada con Clean Architecture y NestJS. Esta arquit
 Estructura del Proyecto
 -----------------------
 
-src/ ├── core/ # Núcleo de la aplicación │ └── exceptions/ # Excepciones personalizadas ├── domain/ # Lógica de negocio │ ├── entities/ # Entidades │ ├── repositories/ # Interfaces de repositorios │ └── usecases/ # Casos de uso ├── data/ # Capa de datos │ ├── datasources/ # Fuentes de datos (Prisma) │ └── repositories/ # Implementación de repositorios ├── presentation/ # Capa de presentación │ └── controllers/ # Controladores HTTP └── infrastructure/ # Configuración y servicios └── config/ # Configuraciones
+src/ 
+├── core/ # Núcleo de la aplicación 
+│ └── exceptions/ # Excepciones personalizadas 
+├── domain/ # Lógica de negocio 
+│ ├── entities/ # Entidades 
+│ ├── repositories/ # Interfaces de repositorios 
+│ └── usecases/ # Casos de uso 
+├── data/ # Capa de datos 
+│ ├── datasources/ # Fuentes de datos (Prisma) 
+│ └── repositories/ # Implementación de repositorios 
+├── presentation/ # Capa de presentación 
+│ └── controllers/ # Controladores HTTP 
+└── infrastructure/ # Configuración y servicios 
+└── config/ # Configuraciones
 
 Capas de la Arquitectura
 ------------------------
