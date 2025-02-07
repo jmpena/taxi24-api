@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Driver {
+  id          Int       @id @default(autoincrement())
+  name        String
+  license     String    @unique
+  available   Boolean   @default(true)
+  latitude    Float
+  longitude   Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  trips       Trip[]
+}
+
+model Passenger {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  trips     Trip[]
+}
+
+model Trip {
+  id          Int       @id @default(autoincrement())
+  driver      Driver    @relation(fields: [driverId], references: [id])
+  driverId    Int
+  passenger   Passenger @relation(fields: [passengerId], references: [id])
+  passengerId Int
+  status      TripStatus @default(PENDING)
+  startLat    Float
+  startLong   Float
+  endLat      Float
+  endLong     Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  invoice     Invoice?
+}
+
+model Invoice {
+  id        Int      @id @default(autoincrement())
+  tripId    Int      @unique
+  trip      Trip     @relation(fields: [tripId], references: [id])
+  amount    Float
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TripStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+} 

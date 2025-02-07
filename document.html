@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi24 - Documentación de Arquitectura</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        
+        .architecture-layer {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .layer-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        .file-structure {
+            font-family: monospace;
+            white-space: pre;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Taxi24 - Documentación de Arquitectura</h1>
+
+    <section class="architecture-layer">
+        <h2 class="layer-title">Instalación y Configuración</h2>
+        
+        <h3>1. Clonar el Repositorio</h3>
+        <pre><code>git clone https://github.com/jmpena/taxi24-api.git
+cd taxi24-api</code></pre>
+
+        <h3>2. Instalar Dependencias</h3>
+        <pre><code># Usando pnpm (recomendado)
+pnpm install
+
+# O usando npm
+npm install</code></pre>
+
+        <h3>3. Configurar Base de Datos</h3>
+        <p>Crear archivo .env en la raíz del proyecto:</p>
+        <pre><code>DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/taxi24db"</code></pre>
+
+        <h3>4. Ejecutar Migraciones</h3>
+        <pre><code># Generar el cliente de Prisma
+npx prisma generate
+
+# Ejecutar migraciones
+npx prisma migrate dev</code></pre>
+
+        <h3>5. Cargar Datos Iniciales (Seed)</h3>
+        <pre><code># Ejecutar seed
+npx prisma db seed</code></pre>
+
+        <h3>6. Ejecutar Tests</h3>
+        <pre><code># Ejecutar todos los tests
+pnpm test
+
+# Ejecutar tests en modo watch
+pnpm test:watch
+
+# Ejecutar tests con coverage
+pnpm test:cov
+
+# Ejecutar un archivo específico de test
+pnpm test src/domain/usecases/__tests__/driver/create-driver.usecase.spec.ts</code></pre>
+
+        <h3>7. Iniciar la Aplicación</h3>
+        <pre><code># Modo desarrollo
+pnpm start:dev
+
+# Modo producción
+pnpm build
+pnpm start:prod</code></pre>
+    </section>
+
+    <section>
+        <h2>Descripción General</h2>
+        <p>
+            Taxi24 es una API REST implementada con Clean Architecture y NestJS. Esta arquitectura está diseñada para mantener
+            el código organizado, testeable y mantenible, siguiendo los principios SOLID.
+        </p>
+    </section>
+
+    <section class="architecture-layer">
+        <h2 class="layer-title">Estructura del Proyecto</h2>
+        <div class="file-structure">
+src/
+├── core/                 # Núcleo de la aplicación
+│   └── exceptions/       # Excepciones personalizadas
+├── domain/              # Lógica de negocio
+│   ├── entities/        # Entidades
+│   ├── repositories/    # Interfaces de repositorios
+│   └── usecases/       # Casos de uso
+├── data/               # Capa de datos
+│   ├── datasources/    # Fuentes de datos (Prisma)
+│   └── repositories/   # Implementación de repositorios
+├── presentation/       # Capa de presentación
+│   └── controllers/    # Controladores HTTP
+└── infrastructure/     # Configuración y servicios
+    └── config/         # Configuraciones
+        </div>
+    </section>
+
+    <section class="architecture-layer">
+        <h2 class="layer-title">Capas de la Arquitectura</h2>
+
+        <h3>1. Core Layer</h3>
+        <p>Contiene las excepciones personalizadas del sistema:</p>
+        <ul>
+            <li><code>license-exists.exception.ts</code>: Error cuando existe licencia duplicada</li>
+            <li><code>driver-not-available.exception.ts</code>: Error cuando un conductor no está disponible</li>
+        </ul>
+
+        <h3>2. Domain Layer</h3>
+        <p>Define las entidades y lógica de negocio:</p>
+        <h4>Entities:</h4>
+        <ul>
+            <li><code>driver.entity.ts</code>: Modelo de conductor</li>
+            <li><code>passenger.entity.ts</code>: Modelo de pasajero</li>
+            <li><code>trip.entity.ts</code>: Modelo de viaje</li>
+            <li><code>invoice.entity.ts</code>: Modelo de factura</li>
+        </ul>
+
+        <h4>Use Cases:</h4>
+        <p>Implementan la lógica de negocio específica:</p>
+        <ul>
+            <li><code>create-driver.usecase.ts</code>: Crear nuevo conductor</li>
+            <li><code>find-nearby-drivers.usecase.ts</code>: Buscar conductores cercanos</li>
+            <li><code>get-available-drivers.usecase.ts</code>: Listar conductores disponibles</li>
+            <li><code>create-trip.usecase.ts</code>: Crear nuevo viaje</li>
+            <li><code>complete-trip.usecase.ts</code>: Completar un viaje</li>
+        </ul>
+
+        <h3>3. Data Layer</h3>
+        <p>Maneja el acceso a datos:</p>
+        <ul>
+            <li><code>prisma.datasource.ts</code>: Cliente Prisma para PostgreSQL</li>
+            <li><code>driver.repository.impl.ts</code>: Implementación del repositorio de conductores</li>
+            <li><code>passenger.repository.impl.ts</code>: Implementación del repositorio de pasajeros</li>
+            <li><code>trip.repository.impl.ts</code>: Implementación del repositorio de viajes</li>
+        </ul>
+
+        <h3>4. Presentation Layer</h3>
+        <p>Controladores que manejan las peticiones HTTP:</p>
+        <ul>
+            <li><code>driver.controller.ts</code>: Endpoints de conductores</li>
+            <li><code>passenger.controller.ts</code>: Endpoints de pasajeros</li>
+            <li><code>trip.controller.ts</code>: Endpoints de viajes</li>
+            <li><code>invoice.controller.ts</code>: Endpoints de facturas</li>
+        </ul>
+    </section>
+
+    <section class="architecture-layer">
+        <h2 class="layer-title">Testing</h2>
+        <p>Cada capa tiene sus propios tests unitarios:</p>
+        <ul>
+            <li>Use Cases: <code>src/domain/usecases/__tests__/</code></li>
+            <li>Controllers: <code>src/presentation/controllers/__tests__/</code></li>
+            <li>Repositories: <code>src/data/repositories/__tests__/</code></li>
+        </ul>
+    </section>
+
+    <section class="architecture-layer">
+        <h2 class="layer-title">Flujo de Datos</h2>
+        <ol>
+            <li>Cliente hace una petición HTTP al controlador</li>
+            <li>Controlador valida la petición y llama al caso de uso apropiado</li>
+            <li>Caso de uso ejecuta la lógica de negocio usando repositorios</li>
+            <li>Repositorio interactúa con la base de datos vía Prisma</li>
+            <li>Respuesta fluye de vuelta al cliente</li>
+        </ol>
+    </section>
+
+    <section class="architecture-layer">
+        <h2 class="layer-title">Dependencias Principales</h2>
+        <ul>
+            <li><strong>NestJS</strong>: Framework de backend</li>
+            <li><strong>Prisma</strong>: ORM para PostgreSQL</li>
+            <li><strong>Jest</strong>: Framework de testing</li>
+            <li><strong>Swagger</strong>: Documentación de API</li>
+        </ul>
+    </section>
+
+    <section class="architecture-layer">
+        <h2 class="layer-title">Convenciones de Código</h2>
+        <ul>
+            <li>Use Cases: <code>verb-noun.usecase.ts</code></li>
+            <li>Controllers: <code>noun.controller.ts</code></li>
+            <li>Repositories: <code>noun.repository.ts</code></li>
+            <li>Tests: <code>*.spec.ts</code></li>
+        </ul>
+    </section>
+</body>
+</html> 
